@@ -7,6 +7,13 @@ var authenticate = require('../authenticate');
 var router = express.Router();
 router.use(bodyParser.json());
 
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) { // Only registered admin can view all users' details
+  User.find({}, (err, users) => { // Find all users
+    if (err) { res.send(err) }
+    res.render('listUsers', { title: 'All users', allUsers: users }); // Render user details from template '../views/listUsers.jade'
+  })
+});
+
 router.post('/signup', (req, res, next) => { // Allow user to signup for website
   User.register(new User({username: req.body.username}), // Create a new user with req.body.username as username
     req.body.password, (err, user) => { 

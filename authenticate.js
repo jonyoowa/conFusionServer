@@ -37,3 +37,13 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
     }));
 
 exports.verifyUser = passport.authenticate('jwt', {session: false}); // Use token and verify user's authenticity 
+
+exports.verifyAdmin = ((req, res, next) => { // Check if current user is an administrator
+    if (!req.user.admin) { // User is not admin
+        err = new Error('You are not authorized to perform this operation!');
+        err.status = 403;
+        return next(err);    
+    }
+
+    next(); // User is admin, proceed to next
+});

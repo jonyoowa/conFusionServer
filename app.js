@@ -7,7 +7,7 @@ var session = require('express-session'); // Session middleware
 var FileStore = require('session-file-store')(session); // Store for session info
 var passport = require('passport'); // For authenticating requests using 'strategies' 
 
-var authenticate = require('./authenticate'); // Use 'authenticate' in the specified routes files instead
+//var authenticate = require('./authenticate'); // Use 'authenticate' in the specified routes files instead
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
@@ -38,37 +38,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser('12345-67890-09876-54321')); // Supply secret key for cookie parser
 
-// Session
-// app.use(session({ 
-//   name: 'session-id',
-//   secret: '12345-67890-09876-54321',
-//   saveUninitialized: false,
-//   resave: false,
-//   store: new FileStore()
-// }));
-
 app.use(passport.initialize()); // Auto serialize user info 
 // app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-// function auth (req, res, next) { // Authentication only needed for certain routes 
-//   console.log(req.user);
-
-//   if (!req.user) { // no authentication applied
-//     var err = new Error('You are not authenticated!');
-//     res.setHeader('WWW-Authenticate', 'Basic');                          
-//     err.status = 403;
-//     next(err);
-//   }
-//   else {
-//     next();
-//   }
-// }
-
-// app.use(auth);
-//
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -76,13 +50,11 @@ app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function(req, res, next) { // catch 404 and forward to error handler
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res, next) { // error handler
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

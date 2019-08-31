@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  p Users are:
+  ul
+    each user in allUsers
+      li= "Username: " + user.username + "  |  First Name: " + user.firstname + "  |  Last Name: " + user.lastname + "  |  Admin: " + user.admin   
