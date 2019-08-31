@@ -3,20 +3,20 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session');
-var FileStore = require('session-file-store')(session);
-var passport = require('passport');
-var authenticate = require('./authenticate');
+var session = require('express-session'); // Session middleware
+var FileStore = require('session-file-store')(session); // Store for session info
+var passport = require('passport'); // For authenticating requests using 'strategies' 
+
+var authenticate = require('./authenticate'); // Use 'authenticate' in the specified routes files instead
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // db 
 
 const Dishes = require('./models/dishes');
 
@@ -36,10 +36,10 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser('12345-67890-09876-54321'));
+//app.use(cookieParser('12345-67890-09876-54321')); // Supply secret key for cookie parser
 
 // Session
-// app.use(session({
+// app.use(session({ 
 //   name: 'session-id',
 //   secret: '12345-67890-09876-54321',
 //   saveUninitialized: false,
@@ -47,17 +47,16 @@ app.use(express.urlencoded({ extended: false }));
 //   store: new FileStore()
 // }));
 
-app.use(passport.initialize());
+app.use(passport.initialize()); // Auto serialize user info 
 // app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// Authentication
-// function auth (req, res, next) {
+// function auth (req, res, next) { // Authentication only needed for certain routes 
 //   console.log(req.user);
 
-//   if (!req.user) {
+//   if (!req.user) { // no authentication applied
 //     var err = new Error('You are not authenticated!');
 //     res.setHeader('WWW-Authenticate', 'Basic');                          
 //     err.status = 403;

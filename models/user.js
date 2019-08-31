@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var passportLocalMongoose = require('passport-local-mongoose');
+var mongoose = require('mongoose'); 
+var Schema = mongoose.Schema; 
+var passportLocalMongoose = require('passport-local-mongoose'); 
 
 var User = new Schema({
     firstname: {
@@ -17,6 +17,6 @@ var User = new Schema({
       }  
 });
 
-User.plugin(passportLocalMongoose);
+User.plugin(passportLocalMongoose); // Auto add username and hashed storage of the password, as well as additional methods to User schema
 
 module.exports = mongoose.model('User', User);

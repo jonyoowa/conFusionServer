@@ -19,6 +19,7 @@ var commentSchema = new Schema({
         ref: 'User'
     }
 }, {
+    userPushEach: true,
     timestamps: true
 });
 
