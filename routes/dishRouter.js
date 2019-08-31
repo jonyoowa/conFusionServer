@@ -182,12 +182,12 @@ dishRouter.route('/:dishId/comments/:commentId')
 .put(authenticate.verifyUser, (req, res, next) => { // Only comment author user can modify comment
     Dishes.findById(req.params.dishId)
     .then((dish) => {
-        if (!dish.comments.id(req.params.commentId).author._id.equals(req.user._id)) { // Current user is not comment author
-            err = new Error('You can only edit your own comments!');
-            err.status = 403;
-            return next(err);
-        }
         if (dish != null && dish.comments.id(req.params.commentId) != null) { // Ensure that dish exists and comment exists
+            if (!dish.comments.id(req.params.commentId).author._id.equals(req.user._id)) { // Current user is not comment author
+                err = new Error('You can only delete your own comments!');
+                err.status = 403;
+                return next(err);
+            }
             if (req.body.rating) {
                 dish.comments.id(req.params.commentId).rating = req.body.rating;
             }
@@ -225,12 +225,12 @@ dishRouter.route('/:dishId/comments/:commentId')
 .delete(authenticate.verifyUser, (req, res, next) => { // Only comment author user can delete comment
     Dishes.findById(req.params.dishId)
     .then((dish) => {
-        if (!dish.comments.id(req.params.commentId).author._id.equals(req.user._id)) { // Current user is not comment author
-            err = new Error('You can only delete your own comments!');
-            err.status = 403;
-            return next(err);
-        }
         if (dish != null && dish.comments.id(req.params.commentId) != null) { // Ensure that dish exists and comment exists
+            if (!dish.comments.id(req.params.commentId).author._id.equals(req.user._id)) { // Current user is not comment author
+                err = new Error('You can only delete your own comments!');
+                err.status = 403;
+                return next(err);
+            }
             dish.comments.id(req.params.commentId).remove();
             dish.save()
             .then((dish) => {
