@@ -3,18 +3,19 @@ const bodyParser = require('body-parser'); // For parsing incoming request bodie
 var User = require('../models/user');
 var passport = require('passport'); // For authenticating requests 
 var authenticate = require('../authenticate'); 
+const cors = require('./cors');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) { // Only registered admin can view all users' details
+router.get('/', cors.cors, authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) { // Only registered admin can view all users' details
   User.find({}, (err, users) => { // Find all users
     if (err) { res.send(err) }
     res.render('listUsers', { title: 'All users', allUsers: users }); // Render user details from template '../views/listUsers.jade'
   })
 });
 
-router.post('/signup', (req, res, next) => { // Allow user to signup for website
+router.post('/signup', cors.corsWithOptions, (req, res, next) => { // Allow user to signup for website
   User.register(new User({username: req.body.username}), // Create a new user with req.body.username as username
     req.body.password, (err, user) => { 
     if(err) { 
@@ -46,14 +47,14 @@ router.post('/signup', (req, res, next) => { // Allow user to signup for website
   });
 });
 
-router.post('/login', passport.authenticate('local'), (req, res) => { // If authentication call is successful, then check req and res
+router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req, res) => { // If authentication call is successful, then check req and res
   var token = authenticate.getToken({_id: req.user._id}); // Create token with the user id  
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.json({success: true, token: token, status: 'You are successfully logged in!'}); // Also send back token when user is successfully authenticated
 });
 
-router.get('/logout', (req, res) => { // Allow user to logout 
+router.get('/logout', cors.cors, (req, res) => { // Allow user to logout 
   if (req.session) { // Session must exist (Must be logged in)
     req.session.destroy(); // Destroy session on the server side
     res.clearCookie('session-id'); // Remove cookie
