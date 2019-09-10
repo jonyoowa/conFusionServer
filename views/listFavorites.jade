@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= title
+  ul
+    each dish in favorites
+      li= "Name: " + dish.name + "  |  Description: " + dish.description + "  |  Category: " + dish.category + "  |  Label: " + dish.Label   
