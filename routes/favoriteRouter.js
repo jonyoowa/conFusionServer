@@ -28,7 +28,7 @@ favoriteRouter.route('/')
         if (favorite) { // Favorite document already exists
             for (let i = 0; i < req.body.length; i++) { // Loop through all elements in body
                 if (favorite.dishes.indexOf(req.body[i]._id === -1)) { // Make sure favorite isn't already in user's favorites
-                    favorite.push(req.body._id); // Add favorite to user's favorites
+                    favorite.dishes.push(req.body[i]._id); // Add favorite to user's favorites
                 }
             }
             favorite.save() // Save the changes made to db
